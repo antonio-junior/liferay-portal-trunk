@@ -623,14 +623,13 @@ public class PortalImpl implements Portal {
 	}
 
 	public void clearRequestParameters(RenderRequest renderRequest) {
+		RenderRequestImpl renderRequestImpl = (RenderRequestImpl)renderRequest;
 
-		// Clear the render parameters if they were set during processAction
+		if (renderRequestImpl.isTriggeredByActionURL()) {
+			Map<String, String[]> renderParameters =
+				renderRequestImpl.getRenderParameters();
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		if (themeDisplay.isLifecycleAction()) {
-			((RenderRequestImpl)renderRequest).getRenderParameters().clear();
+			renderParameters.clear();
 		}
 	}
 

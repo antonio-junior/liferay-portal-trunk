@@ -2,6 +2,7 @@ AUI().add(
 	'liferay-category-admin',
 	function(A) {
 		var JSON = A.JSON;
+		var Lang = A.Lang;
 		var Node = A.Node;
 
 		var ACTION_ADD = 0;
@@ -56,10 +57,6 @@ AUI().add(
 				NAME: 'assetcategoryadmin',
 
 				EXTENDS: A.Base,
-
-				constructor: function() {
-					AssetCategoryAdmin.superclass.constructor.apply(this, arguments);
-				},
 
 				prototype: {
 					initializer: function(config) {
@@ -356,7 +353,7 @@ AUI().add(
 							zIndex: 1000
 						};
 
-						if (A.Lang.isObject(config)) {
+						if (Lang.isObject(config)) {
 							config = A.merge(defaultConfig, config);
 						}
 						else {
@@ -531,7 +528,7 @@ AUI().add(
 						if (instance.treeView) {
 							bubbleTargets.push(instance.treeView);
 						}
-// console.log(bubbleTargets);
+
 						listLinks.plug(
 							A.Plugin.Drop,
 							{
@@ -568,7 +565,7 @@ AUI().add(
 											item.cssClassSelected = '';
 										}
 
-										buffer.push(A.Lang.sub(TPL_VOCABULARY_LIST, item));
+										buffer.push(Lang.sub(TPL_VOCABULARY_LIST, item));
 									}
 								);
 
@@ -676,6 +673,7 @@ AUI().add(
 							ioCategoryUpdate = A.io.request(
 								null,
 								{
+									arguments: {},
 									autoLoad: false,
 									dataType: 'json',
 									on: {
@@ -920,7 +918,7 @@ AUI().add(
 						var nodeId = node.get('id') || '';
 						var categoryId = nodeId.replace('categoryNode', '');
 
-						if (A.Lang.isGuid(categoryId)) {
+						if (Lang.isGuid(categoryId)) {
 							categoryId = '';
 						}
 
@@ -1831,9 +1829,8 @@ AUI().add(
 
 						ioCategoryUpdate.set('data', data);
 						ioCategoryUpdate.set('uri', moveURL.toString());
-						ioCategoryUpdate.set('arguments', {
-						   success: vocabularyId
-						});
+
+						ioCategoryUpdate.set('arguments.success', vocabularyId);
 
 						ioCategoryUpdate.start();
 					},

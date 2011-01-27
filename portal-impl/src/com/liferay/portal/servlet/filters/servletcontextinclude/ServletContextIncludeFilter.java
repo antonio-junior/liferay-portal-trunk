@@ -17,6 +17,7 @@ package com.liferay.portal.servlet.filters.servletcontextinclude;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.ThemeHelper;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutSet;
@@ -44,17 +45,24 @@ public class ServletContextIncludeFilter extends BasePortalFilter {
 		HttpServletRequest request, HttpServletResponse response) {
 
 		try {
-			if (request.getAttribute(
-					WebKeys.SERVLET_CONTEXT_INCLUDE_FILTER_THEME) != null) {
-
-				return true;
-			}
-
 			Theme theme = getTheme(request);
 
-			if (theme != null) {
+			if (theme == null) {
+				return false;
+			}
+
+			FilterConfig filterConfig = getFilterConfig();
+
+			ServletContext servletContext = filterConfig.getServletContext();
+
+			String uri = (String)request.getAttribute(
+				WebKeys.INVOKER_FILTER_URI);
+
+			if (ThemeHelper.resourceExists(servletContext, theme, uri)) {
 				request.setAttribute(
 					WebKeys.SERVLET_CONTEXT_INCLUDE_FILTER_THEME, theme);
+				request.setAttribute(
+					WebKeys.SERVLET_CONTEXT_INCLUDE_FILTER_PATH, uri);
 
 				return true;
 			}
@@ -115,6 +123,11 @@ public class ServletContextIncludeFilter extends BasePortalFilter {
 			FilterChain filterChain)
 		throws Exception {
 
+		Theme theme = (Theme)request.getAttribute(
+			WebKeys.SERVLET_CONTEXT_INCLUDE_FILTER_THEME);
+
+		request.setAttribute(WebKeys.THEME, theme);
+
 		FilterConfig filterConfig = getFilterConfig();
 
 		ServletContext servletContext = filterConfig.getServletContext();
@@ -122,16 +135,6 @@ public class ServletContextIncludeFilter extends BasePortalFilter {
 		RequestDispatcher requestDispatcher =
 			servletContext.getRequestDispatcher(
 				"/WEB-INF/jsp/_servlet_context_include.jsp");
-
-		String path = request.getRequestURI();
-
-		request.setAttribute(
-			WebKeys.SERVLET_CONTEXT_INCLUDE_FILTER_PATH, path);
-
-		Theme theme = (Theme)request.getAttribute(
-			WebKeys.SERVLET_CONTEXT_INCLUDE_FILTER_THEME);
-
-		request.setAttribute(WebKeys.THEME, theme);
 
 		requestDispatcher.include(request, response);
 	}

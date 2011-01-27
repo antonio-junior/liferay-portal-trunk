@@ -28,6 +28,7 @@ import com.liferay.portal.kernel.scheduler.SchedulerEngineUtil;
 import com.liferay.portal.kernel.scheduler.SchedulerEntry;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.servlet.DirectServletRegistry;
 import com.liferay.portal.kernel.servlet.PortletServlet;
 import com.liferay.portal.kernel.servlet.ServletContextProvider;
 import com.liferay.portal.kernel.util.ClassUtil;
@@ -291,9 +292,7 @@ public class PortletHotDeployListener extends BaseHotDeployListener {
 		PortletCategory newPortletCategory =
 			PortletLocalServiceUtil.getWARDisplay(servletContextName, xml);
 
-		for (int i = 0; i < companyIds.length; i++) {
-			long companyId = companyIds[i];
-
+		for (long companyId : companyIds) {
 			PortletCategory portletCategory =
 				(PortletCategory)WebAppPool.get(
 					String.valueOf(companyId), WebKeys.PORTLET_CATEGORY);
@@ -370,6 +369,8 @@ public class PortletHotDeployListener extends BaseHotDeployListener {
 
 		registerClpMessageListeners(servletContext, portletClassLoader);
 
+		DirectServletRegistry.clearServlets();
+
 		// Variables
 
 		_vars.put(
@@ -428,9 +429,7 @@ public class PortletHotDeployListener extends BaseHotDeployListener {
 		}
 
 		if (portletIds.size() > 0) {
-			for (int i = 0; i < companyIds.length; i++) {
-				long companyId = companyIds[i];
-
+			for (long companyId : companyIds) {
 				PortletCategory portletCategory =
 					(PortletCategory)WebAppPool.get(
 						String.valueOf(companyId), WebKeys.PORTLET_CATEGORY);
@@ -586,12 +585,12 @@ public class PortletHotDeployListener extends BaseHotDeployListener {
 		if (Validator.isNotNull(languageBundleName)) {
 			Locale[] locales = LanguageUtil.getAvailableLocales();
 
-			for (int i = 0; i < locales.length; i++) {
+			for (Locale locale : locales) {
 				ResourceBundle resourceBundle = ResourceBundle.getBundle(
-					languageBundleName, locales[i], portletClassLoader);
+					languageBundleName, locale, portletClassLoader);
 
 				PortletResourceBundles.put(
-					servletContextName, LocaleUtil.toLanguageId(locales[i]),
+					servletContextName, LocaleUtil.toLanguageId(locale),
 					resourceBundle);
 			}
 		}
@@ -599,10 +598,9 @@ public class PortletHotDeployListener extends BaseHotDeployListener {
 		String[] resourceActionConfigs = StringUtil.split(
 			portletProperties.getProperty(PropsKeys.RESOURCE_ACTIONS_CONFIGS));
 
-		for (int i = 0; i < resourceActionConfigs.length; i++) {
+		for (String resourceActionConfig : resourceActionConfigs) {
 			ResourceActionsUtil.read(
-				servletContextName, portletClassLoader,
-				resourceActionConfigs[i]);
+				servletContextName, portletClassLoader, resourceActionConfig);
 		}
 	}
 

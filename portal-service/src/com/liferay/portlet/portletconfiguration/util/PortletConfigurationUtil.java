@@ -56,11 +56,12 @@ public class PortletConfigurationUtil {
 	public static String getPortletTitle(
 		PortletPreferences portletSetup, String languageId) {
 
-		String useCustomTitle = GetterUtil.getString(portletSetup.getValue(
-			"portlet-setup-use-custom-title", StringPool.BLANK));
+		String useCustomTitle = GetterUtil.getString(
+			portletSetup.getValue(
+				"portlet-setup-use-custom-title", StringPool.BLANK));
 
-		if (useCustomTitle.equals("false")) {
-			return StringPool.BLANK;
+		if (!useCustomTitle.equals("true")) {
+			return null;
 		}
 
 		String defaultLanguageId = LocaleUtil.toLanguageId(

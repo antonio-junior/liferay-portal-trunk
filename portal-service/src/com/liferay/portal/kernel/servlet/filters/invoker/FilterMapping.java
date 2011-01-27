@@ -83,7 +83,7 @@ public class FilterMapping {
 			return false;
 		}
 
-		if (isMatchURLRegexPattern(request)) {
+		if (isMatchURLRegexPattern(request, uri)) {
 			return true;
 		}
 
@@ -186,18 +186,10 @@ public class FilterMapping {
 		return false;
 	}
 
-	protected boolean isMatchURLRegexPattern(HttpServletRequest request) {
-		StringBuffer requestURL = request.getRequestURL();
+	protected boolean isMatchURLRegexPattern(
+		HttpServletRequest request, String uri) {
 
-		if (requestURL == null) {
-			return false;
-		}
-
-		if ((_urlRegexPattern == null) && (_urlRegexIgnorePattern == null)) {
-			return true;
-		}
-
-		String url = requestURL.toString();
+		String url = uri;
 
 		String queryString = request.getQueryString();
 

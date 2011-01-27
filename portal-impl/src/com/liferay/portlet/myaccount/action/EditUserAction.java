@@ -15,7 +15,6 @@
 package com.liferay.portlet.myaccount.action;
 
 import com.liferay.portal.UserPasswordException;
-import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.CompanyConstants;
@@ -77,12 +76,10 @@ public class EditUserAction
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		String requestPassword = ParamUtil.getString(
-			actionRequest, "password0");
+		String requestPassword = actionRequest.getParameter("password0");
 
 		if (Validator.isNotNull(requestPassword)) {
-			String newPassword = ParamUtil.getString(
-				actionRequest, "password1");
+			String newPassword = actionRequest.getParameter("password1");
 
 			if (Validator.isNull(newPassword)) {
 				throw new UserPasswordException(

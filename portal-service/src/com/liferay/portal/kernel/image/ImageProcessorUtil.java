@@ -67,6 +67,10 @@ public class ImageProcessorUtil {
 		return getImageProcessor().read(bytes);
 	}
 
+	public static RenderedImage scale(RenderedImage renderedImage, int width) {
+		return getImageProcessor().scale(renderedImage, width);
+	}
+
 	public static RenderedImage scale(
 		RenderedImage renderedImage, int maxHeight, int maxWidth) {
 

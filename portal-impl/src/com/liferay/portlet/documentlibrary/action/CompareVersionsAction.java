@@ -22,13 +22,10 @@ import com.liferay.portal.kernel.util.DiffResult;
 import com.liferay.portal.kernel.util.DiffUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.struts.PortletAction;
-import com.liferay.portal.util.PrefsPropsUtil;
-import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.documentlibrary.NoSuchFileEntryException;
 import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
@@ -115,9 +112,7 @@ public class CompareVersionsAction extends PortletAction {
 				escapedTarget.getBytes(StringPool.UTF8));
 		}
 
-		if (PrefsPropsUtil.getBoolean(
-				PropsKeys.OPENOFFICE_SERVER_ENABLED,
-				PropsValues.OPENOFFICE_SERVER_ENABLED) &&
+		if (DocumentConversionUtil.isEnabled() &&
 			DocumentConversionUtil.isConvertBeforeCompare(extension)) {
 
 			String sourceTempFileId = DLUtil.getTempFileId(

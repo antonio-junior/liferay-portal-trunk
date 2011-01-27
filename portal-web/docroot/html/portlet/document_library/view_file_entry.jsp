@@ -161,6 +161,56 @@ request.setAttribute("view_file_entry.jsp-fileEntry", fileEntry);
 			</c:if>
 		</div>
 
+		<c:if test="<%= PropsValues.DL_FILE_ENTRY_PREVIEW_ENABLED %>">
+			<div>
+
+				<%
+				int previewFileCount = PDFProcessorUtil.getPreviewFileCount(fileEntry);
+
+				String previewFileURL = themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + themeDisplay.getScopeGroupId() + StringPool.SLASH + fileEntry.getFolderId() + StringPool.SLASH + HttpUtil.encodeURL(HtmlUtil.unescape(fileEntry.getTitle())) + "?version=" + fileEntry.getVersion() + "&previewFileIndex=";
+				%>
+
+				<c:choose>
+					<c:when test="<%= previewFileCount == 0 %>">
+						<liferay-ui:message key="generating-preview-will-take-a-few-minutes" />
+					</c:when>
+					<c:otherwise>
+						<div>
+							[<a href="javascript:<portlet:namespace />previous();"><liferay-ui:message key="previous" /></a>] [<a href="javascript:<portlet:namespace />next();"><liferay-ui:message key="next" /></a>]
+
+							<span id="<portlet:namespace />previewFileIndex">1</span> of <span><%= previewFileCount %></span>
+						</div>
+
+						<div>
+							<img id="<portlet:namespace />previewFile" src="<%= previewFileURL + "1" %>" width="500px" />
+						</div>
+
+						<script type="text/javascript">
+							var <portlet:namespace />previewFileIndex = 1;
+
+							function <portlet:namespace />next() {
+								if (<portlet:namespace />previewFileIndex < <%= previewFileCount %>) {
+									<portlet:namespace />previewFileIndex++;
+								}
+
+								document.getElementById('<portlet:namespace/>previewFile').src = '<%= previewFileURL %>' + <portlet:namespace />previewFileIndex;
+								document.getElementById('<portlet:namespace/>previewFileIndex').innerHTML = <portlet:namespace />previewFileIndex;
+							}
+
+							function <portlet:namespace />previous() {
+								if (<portlet:namespace />previewFileIndex > 1) {
+									<portlet:namespace />previewFileIndex--;
+								}
+
+								document.getElementById('<portlet:namespace/>previewFile').src = '<%= previewFileURL %>' + <portlet:namespace />previewFileIndex;
+								document.getElementById('<portlet:namespace/>previewFileIndex').innerHTML = <portlet:namespace />previewFileIndex;
+							}
+						</script>
+					</c:otherwise>
+				</c:choose>
+			</div>
+		</c:if>
+
 		<div class="lfr-asset-categories">
 			<liferay-ui:asset-categories-summary
 				className="<%= DLFileEntryConstants.getClassName() %>"

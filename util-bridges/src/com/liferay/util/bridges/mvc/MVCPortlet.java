@@ -317,28 +317,17 @@ public class MVCPortlet extends LiferayPortlet {
 			PortletResponse portletResponse, String lifecycle)
 		throws IOException, PortletException {
 
-		checkJSPPath(path);
-
 		PortletContext portletContext = getPortletContext();
 
-		PortletRequestDispatcher portletRequestDispatcher = null;
-
-		if (path.endsWith(".jsp")) {
-			portletRequest.setAttribute(
-				WebKeys.SERVLET_CONTEXT_INCLUDE_FILTER_PATH, path);
-
-			portletRequestDispatcher = portletContext.getRequestDispatcher(
-				"/WEB-INF/jsp/_servlet_context_include.jsp");
-		}
-		else {
-			portletRequestDispatcher = portletContext.getRequestDispatcher(
-				path);
-		}
+		PortletRequestDispatcher portletRequestDispatcher =
+			portletContext.getRequestDispatcher(path);
 
 		if (portletRequestDispatcher == null) {
 			_log.error(path + " is not a valid include");
 		}
 		else {
+			checkJSPPath(path);
+
 			portletRequestDispatcher.include(portletRequest, portletResponse);
 		}
 

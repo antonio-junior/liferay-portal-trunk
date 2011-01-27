@@ -350,6 +350,11 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<name>languageId</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<name>last</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -483,6 +488,11 @@
 		<name>panel</name>
 		<tag-class>com.liferay.taglib.aui.PanelTag</tag-class>
 		<body-content>JSP</body-content>
+		<attribute>
+			<name>collapsed</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 		<attribute>
 			<name>collapsible</name>
 			<required>false</required>
